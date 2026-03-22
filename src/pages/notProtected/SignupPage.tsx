@@ -2,18 +2,22 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/api";
+import { useAuth } from "../../providers/authProvider";
 
 export default function SignupPage() {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
+    const [name, setName] = useState("")
+
+    const { login } = useAuth()
 
     // Step 3 states
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const navigate =  useNavigate()
+    const navigate = useNavigate()
 
     const sendOtp = async () => {
         setLoading(true);
@@ -30,10 +34,30 @@ export default function SignupPage() {
     };
 
     const createAccount = async () => {
-        setLoading(true);
-        await api.post("/company/auth/register", { email, password });
-        navigate("/dashboard")
-        setLoading(false);
+        try {
+            setLoading(true);
+
+            const res = await api.post("/company/auth/signup", {
+                email,
+                password,
+                name,
+            });
+
+            const { user, token } = res.data;
+
+            await login(
+                user,
+                token.accessToken,
+                token.refreshToken
+            );
+
+            navigate("/dashboard");
+
+        } catch (err: any) {
+            console.error("Signup Error:", err.response?.data || err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -89,6 +113,16 @@ export default function SignupPage() {
                         <div>
                             <h2 className="text-2xl font-bold mb-1">Secure your account</h2>
                             <p className="text-sm text-gray-400 mb-6">Create a strong password for your portal.</p>
+
+                            <div className="relative mb-4">
+                                <input
+                                    type="text"
+                                    placeholder="Company Name"
+                                    className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all pr-12"
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+
+                            </div>
 
                             <div className="relative">
                                 <input

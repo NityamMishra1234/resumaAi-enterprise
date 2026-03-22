@@ -4,7 +4,7 @@ import { tokenServices } from "../services/tokenServices";
 
 
 const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "http://api.gcs-online.space",
     timeout: 50000,
 })
 
@@ -39,7 +39,7 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // 🔥 SKIP AUTH ROUTES
+        //  SKIP AUTH ROUTES
         if (originalRequest.url.includes("/company/auth")) {
             return Promise.reject(error);
         }
@@ -72,7 +72,7 @@ api.interceptors.response.use(
                 }
 
                 const res = await axios.post(
-                    "http://localhost:3000/company/auth/refreshtoken",
+                    "http://api.gcs-online.space/company/auth/refreshtoken",
                     { refreshToken }
                 );
 

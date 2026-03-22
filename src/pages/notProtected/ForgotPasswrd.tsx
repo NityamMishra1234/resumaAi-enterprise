@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import api from "../../api/api"; // Adjust import path
+import api from "../../api/api";
 
 export default function ForgotPasswordPage() {
     const navigate = useNavigate();
@@ -19,16 +19,21 @@ export default function ForgotPasswordPage() {
 
     const handleSendOtp = async () => {
         setLoading(true);
-        // await api.post("/company/auth/forgot-password", { email });
+        await api.post("/company/auth/forgot-password/send-otp", { email });
         setStep(2);
         setLoading(false);
     };
 
     const handleVerifyOtp = async () => {
         setLoading(true);
-        // await api.post("/company/auth/verify-reset-otp", { email, otp });
-        setStep(3);
-        setLoading(false);
+        try {
+            await api.post("/company/auth/forgot-password/verify-otp", { email, otp });
+            setLoading(false);
+            setStep(3);
+        } catch (error: any) {
+            alert(`${error.data.message}`)
+            setLoading(false);
+        }
     };
 
     const handleResetPassword = async () => {
@@ -37,10 +42,19 @@ export default function ForgotPasswordPage() {
             return;
         }
         setError("");
-        setLoading(true);
-        // await api.post("/company/auth/reset-password", { email, otp, newPassword: password });
-        navigate("/login");
-        setLoading(false);
+
+        try {
+            setLoading(true);
+            await api.post("/company/auth/forgot-password/reset", { email, password: password });
+            navigate("/login");
+            setLoading(false);
+
+        } catch (error: any) {
+            alert(`${error.data.message}`)
+            setLoading(false);
+
+        }
+
     };
 
     return (
