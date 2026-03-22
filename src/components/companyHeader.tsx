@@ -1,6 +1,6 @@
 // components/Header.tsx
 import { LogOut, LayoutDashboard } from 'lucide-react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/authProvider';
 
 const CompanyHeader = () => {

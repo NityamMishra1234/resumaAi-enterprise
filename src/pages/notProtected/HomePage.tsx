@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { CheckCircle2, Users, Zap, Shield, ArrowRight, BarChart3, Bot } from "lucide-react";
+import { CheckCircle2,  Zap, Shield, ArrowRight, BarChart3, Bot } from "lucide-react";
 
 export default function HomePage() {
     return (
