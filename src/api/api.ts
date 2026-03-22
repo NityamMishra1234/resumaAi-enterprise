@@ -4,7 +4,7 @@ import { tokenServices } from "../services/tokenServices";
 
 
 const api = axios.create({
-    baseURL: "http://api.gcs-online.space",
+    baseURL: "https://api.gcs-online.space",
     timeout: 50000,
 })
 
@@ -72,7 +72,7 @@ api.interceptors.response.use(
                 }
 
                 const res = await axios.post(
-                    "http://api.gcs-online.space/company/auth/refreshtoken",
+                    "https://api.gcs-online.space/company/auth/refreshtoken",
                     { refreshToken }
                 );
 
